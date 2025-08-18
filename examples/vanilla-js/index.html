@@ -7,29 +7,30 @@
     <title>gsplat.js Viewer Demo</title>
 </head>
 <body>
-<div id="controls">
-    <div style="margin-bottom:10px;">
-        <input type="text" id="url-input" placeholder="Paste .splat or .ply URL here" style="width:300px;">
-        <button id="load-url">Load from URL</button>
-    </div>
+    <header>
+        <h1>gsplat.js Viewer</h1>
+    </header>
 
-    <div style="margin-bottom:10px;">
-        <label for="file-input">Choose a file (.splat / .ply):</label>
-        <input type="file" id="file-input">
-        <button id="load-file">Load File</button>
-    </div>
+    <div id="controls">
+        <div class="input-group">
+            <input type="text" id="url-input" placeholder="Paste .splat or .ply URL here">
+            <button id="load-url">Load from URL</button>
+        </div>
 
-    <div style="margin-bottom:10px;">
-        <button id="convert-download">Convert & Download</button>
-    </div>
-</div>
+        <div class="input-group">
+            <label for="file-input">Choose a file (.splat / .ply):</label>
+            <input type="file" id="file-input">
+            <button id="load-file">Load File</button>
+        </div>
 
+        <div class="input-group">
+            <button id="convert-download">Convert & Download</button>
+        </div>
+    </div>
 
     <div id="progress-container">
         <dialog id="progress-dialog">
-            <p>
-                <label for="progress-indicator">Loading scene...</label>
-            </p>
+            <p>Loading scene...</p>
             <progress max="100" id="progress-indicator"></progress>
         </dialog>
     </div>
