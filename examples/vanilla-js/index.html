@@ -7,14 +7,23 @@
     <title>gsplat.js Viewer Demo</title>
 </head>
 <body>
-    <div id="controls" style="margin-bottom:10px;">
-        <!-- URL input -->
+<div id="controls">
+    <div style="margin-bottom:10px;">
         <input type="text" id="url-input" placeholder="Paste .splat or .ply URL here" style="width:300px;">
-        <button id="load-url">Load</button>
-
-        <!-- File upload input -->
-        <input type="file" id="file-input">
+        <button id="load-url">Load from URL</button>
     </div>
+
+    <div style="margin-bottom:10px;">
+        <label for="file-input">Choose a file (.splat / .ply):</label>
+        <input type="file" id="file-input">
+        <button id="load-file">Load File</button>
+    </div>
+
+    <div style="margin-bottom:10px;">
+        <button id="convert-download">Convert & Download</button>
+    </div>
+</div>
+
 
     <div id="progress-container">
         <dialog id="progress-dialog">

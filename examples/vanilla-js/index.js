@@ -9,44 +9,53 @@ const camera = new SPLAT.Camera();
 const controls = new SPLAT.OrbitControls(camera, canvas);
 const renderer = new SPLAT.WebGLRenderer(canvas);
 
-const format = ""; 
+let currentFileName = ""; 
+let currentFormat = ""; 
 
 
 async function loadScene(source) {
     progressDialog.show();
-    scene = new SPLAT.Scene(); 
-
-    let isSplat = false;
-    let isPly = false;
+    scene = new SPLAT.Scene();
 
     if (typeof source === "string") {
-
-        isSplat = source.endsWith(".splat");
-        isPly = source.endsWith(".ply");
-
-        if (isSplat) {
+        // URL
+        currentFileName = source.split("/").pop();
+        if (currentFileName.endsWith(".splat")) {
+            currentFormat = "splat";
             await SPLAT.Loader.LoadAsync(source, scene, (progress) => progressIndicator.value = progress * 100);
-        } else if (isPly) {
+        } else if (currentFileName.endsWith(".ply")) {
+            currentFormat = "ply";
             await SPLAT.PLYLoader.LoadAsync(source, scene, (progress) => progressIndicator.value = progress * 100, format);
-            scene.saveToFile(source.split("/").pop()?.replace(".ply", ".splat"));
         }
     } else if (source instanceof File) {
-
-        isSplat = source.name.endsWith(".splat");
-        isPly = source.name.endsWith(".ply");
-
-        if (isSplat) {
+        currentFileName = source.name;
+        if (currentFileName.endsWith(".splat")) {
+            currentFormat = "splat";
             await SPLAT.Loader.LoadFromFileAsync(source, scene, (progress) => progressIndicator.value = progress * 100);
-        } else if (isPly) {
+        } else if (currentFileName.endsWith(".ply")) {
+            currentFormat = "ply";
             await SPLAT.PLYLoader.LoadFromFileAsync(source, scene, (progress) => progressIndicator.value = progress * 100, format);
-            scene.saveToFile(source.name.replace(".ply", ".splat"));
         }
-    } else {
-        console.error("Unknown source type");
     }
 
     progressDialog.close();
 }
+
+
+document.getElementById("convert-download").addEventListener("click", () => {
+    if (!currentFileName || !scene) {
+        alert("No scene loaded to convert!");
+        return;
+    }
+
+    if (currentFormat === "ply") {
+
+        scene.saveToFile(currentFileName.replace(".ply", ".splat"));
+    } else if (currentFormat === "splat") {
+
+        scene.saveToFile(currentFileName.replace(".splat", ".ply"), "ply");
+    }
+});
 
 
 document.getElementById("load-url").addEventListener("click", () => {
