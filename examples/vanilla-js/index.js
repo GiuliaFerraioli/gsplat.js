@@ -1,52 +1,70 @@
 import * as SPLAT from "https://cdn.jsdelivr.net/npm/gsplat@latest";
 
-let scene = new SPLAT.Scene();
 const canvas = document.getElementById("canvas");
 const progressDialog = document.getElementById("progress-dialog");
 const progressIndicator = document.getElementById("progress-indicator");
 
-const renderer = new SPLAT.WebGLRenderer(canvas);
-
+let scene = new SPLAT.Scene();
 const camera = new SPLAT.Camera();
 const controls = new SPLAT.OrbitControls(camera, canvas);
+const renderer = new SPLAT.WebGLRenderer(canvas);
 
-const format = "";
+const format = ""; 
 
-async function loadFromURL(url) {
+
+async function loadScene(source) {
     progressDialog.show();
+    scene = new SPLAT.Scene(); 
 
-    scene = new SPLAT.Scene();
+    let isSplat = false;
+    let isPly = false;
 
-    if (url.endsWith(".splat")) {
-        await SPLAT.Loader.LoadAsync(url, scene, (progress) => (progressIndicator.value = progress * 100));
-    } else if (url.endsWith(".ply")) {
-        await SPLAT.PLYLoader.LoadAsync(url, scene, (progress) => (progressIndicator.value = progress * 100), format);
-        scene.saveToFile(url.split("/").pop()?.replace(".ply", ".splat"));
+    if (typeof source === "string") {
+
+        isSplat = source.endsWith(".splat");
+        isPly = source.endsWith(".ply");
+
+        if (isSplat) {
+            await SPLAT.Loader.LoadAsync(source, scene, (progress) => progressIndicator.value = progress * 100);
+        } else if (isPly) {
+            await SPLAT.PLYLoader.LoadAsync(source, scene, (progress) => progressIndicator.value = progress * 100, format);
+            scene.saveToFile(source.split("/").pop()?.replace(".ply", ".splat"));
+        }
+    } else if (source instanceof File) {
+
+        isSplat = source.name.endsWith(".splat");
+        isPly = source.name.endsWith(".ply");
+
+        if (isSplat) {
+            await SPLAT.Loader.LoadFromFileAsync(source, scene, (progress) => progressIndicator.value = progress * 100);
+        } else if (isPly) {
+            await SPLAT.PLYLoader.LoadFromFileAsync(source, scene, (progress) => progressIndicator.value = progress * 100, format);
+            scene.saveToFile(source.name.replace(".ply", ".splat"));
+        }
+    } else {
+        console.error("Unknown source type");
     }
+
     progressDialog.close();
 }
 
-let loading = false;
-async function selectFile(file) {
-    if (loading) return;
-    loading = true;
 
-    scene = new SPLAT.Scene();
+document.getElementById("load-url").addEventListener("click", () => {
+    const url = document.getElementById("url-input").value.trim();
+    if (url) loadScene(url);
+});
 
-    if (file.name.endsWith(".splat")) {
-        await SPLAT.Loader.LoadFromFileAsync(file, scene, (progress) => (progressIndicator.value = progress * 100));
-    } else if (file.name.endsWith(".ply")) {
-        await SPLAT.PLYLoader.LoadFromFileAsync(file, scene, (progress) => (progressIndicator.value = progress * 100), format);
-        scene.saveToFile(file.name.replace(".ply", ".splat"));
-    }
 
-    loading = false;
-}
+document.getElementById("file-input").addEventListener("change", (e) => {
+    const files = e.target.files;
+    if (files.length) loadScene(files[0]);
+});
+
 
 document.addEventListener("drop", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.dataTransfer?.files.length) selectFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer?.files.length) loadScene(e.dataTransfer.files[0]);
 });
 document.addEventListener("dragover", (e) => e.preventDefault());
 
@@ -58,27 +76,12 @@ function renderLoop() {
 }
 
 
-const btnSplat = document.getElementById("load-splat");
-const btnPLY = document.getElementById("load-ply");
-
-btnSplat.addEventListener("click", () => {
-    const url = "https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/bonsai-7k-mini.splat";
-    loadFromURL(url);
-});
-
-btnPLY.addEventListener("click", () => {
-    const url = "https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/point_cloud/iteration_7000/point_cloud.ply";
-    loadFromURL(url);
-});
-
-
-function main() {
-    renderLoop();
-
-    const handleResize = () => renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-    window.addEventListener("resize", handleResize);
-    handleResize();
+function handleResize() {
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 }
+window.addEventListener("resize", handleResize);
+handleResize();
 
-main();
+
+renderLoop();
 

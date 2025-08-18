@@ -4,14 +4,16 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>gsplat.js - Viewer Demo</title>
+    <title>gsplat.js Viewer Demo</title>
 </head>
-
 <body>
     <div id="controls" style="margin-bottom:10px;">
-        <!-- Buttons to load files from URL -->
-        <button id="load-splat">Load SPLAT</button>
-        <button id="load-ply">Load PLY</button>
+        <!-- URL input -->
+        <input type="text" id="url-input" placeholder="Paste .splat or .ply URL here" style="width:300px;">
+        <button id="load-url">Load</button>
+
+        <!-- File upload input -->
+        <input type="file" id="file-input">
     </div>
 
     <div id="progress-container">
@@ -25,7 +27,7 @@
 
     <canvas id="canvas"></canvas>
 
-    <!-- Your JS file -->
-    <script src="index.js" type="module"></script>
+    <script type="module" src="index.js"></script>
 </body>
 </html>
+
