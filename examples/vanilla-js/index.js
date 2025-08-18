@@ -1,11 +1,12 @@
 import * as SPLAT from "https://cdn.jsdelivr.net/npm/gsplat@latest";
 
+let scene = new SPLAT.Scene();
 const canvas = document.getElementById("canvas");
 const progressDialog = document.getElementById("progress-dialog");
 const progressIndicator = document.getElementById("progress-indicator");
 
 const renderer = new SPLAT.WebGLRenderer(canvas);
-const scene = new SPLAT.Scene();
+
 const camera = new SPLAT.Camera();
 const controls = new SPLAT.OrbitControls(camera, canvas);
 
@@ -13,6 +14,9 @@ const format = "";
 
 async function loadFromURL(url) {
     progressDialog.show();
+
+    scene = new SPLAT.Scene();
+
     if (url.endsWith(".splat")) {
         await SPLAT.Loader.LoadAsync(url, scene, (progress) => (progressIndicator.value = progress * 100));
     } else if (url.endsWith(".ply")) {
@@ -26,6 +30,8 @@ let loading = false;
 async function selectFile(file) {
     if (loading) return;
     loading = true;
+
+    scene = new SPLAT.Scene();
 
     if (file.name.endsWith(".splat")) {
         await SPLAT.Loader.LoadFromFileAsync(file, scene, (progress) => (progressIndicator.value = progress * 100));
