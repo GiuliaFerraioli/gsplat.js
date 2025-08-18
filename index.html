@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>gsplat.js Viewer Demo</title>
+</head>
+<body>
+    <header>
+        <h1>gsplat.js Viewer</h1>
+    </header>
+
+    <div id="controls">
+        <div class="input-group">
+            <input type="text" id="url-input" placeholder="Paste .splat or .ply URL here">
+            <button id="load-url">Load from URL</button>
+        </div>
+
+        <div class="input-group">
+            <label for="file-input">Choose a file (.splat / .ply):</label>
+            <input type="file" id="file-input">
+            <button id="load-file">Load File</button>
+        </div>
+
+        <div class="input-group">
+            <button id="convert-download">Convert & Download</button>
+        </div>
+    </div>
+
+    <div id="progress-container">
+        <dialog id="progress-dialog">
+            <p>Loading scene...</p>
+            <progress max="100" id="progress-indicator"></progress>
+        </dialog>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script type="module" src="index.js"></script>
+</body>
+</html>
+
