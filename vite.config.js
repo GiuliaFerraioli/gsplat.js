@@ -26,6 +26,18 @@ export default defineConfig({
     target: 'esnext',
     copyPublicDir: false
   },
+  server: {
+  host: true,         
+  port: 5173,
+  strictPort: true,
+  cors: true,
+  origin: 'https://b1c61a136878.ngrok-free.app',
+  hmr: {
+    protocol: 'ws',
+    host: 'b1c61a136878.ngrok-free.app',
+  },
+  allowedHosts: ['b1c61a136878.ngrok-free.app']
+  },
   worker: {
     format: 'es',
     sourcemap: false,
