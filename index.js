@@ -11,7 +11,7 @@ const renderer = new SPLAT.WebGLRenderer(canvas);
 
 let currentFileName = ""; 
 let currentFormat = ""; 
-
+const format = ""; 
 
 async function loadScene(source) {
     progressDialog.show();
